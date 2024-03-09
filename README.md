@@ -13,8 +13,9 @@
 
 #文件替换 执行所有配置
 
-#增加操作name,respath,moveto 添加一个名称为name的配置，使respath复制到moveto
+#增加操作name,respath,moveto 添加一个名称为name的配置，使respath复制到moveto，respath和moveto为文件/文件夹路径
 
 #删除操作name 删除一个名称为name的配置
+
 
 第一次请使用#文件替换 后再使用其他命令
