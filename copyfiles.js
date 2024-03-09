@@ -14,15 +14,19 @@ export class files extends plugin {
       rule: [{
         reg: '#文件替换',
         fnc: 'copyfiles',
+        permission: 'master',
       },{
         reg: '#增加操作([^,]+),([^,]+),([^,]+)',
         fnc: 'addoperations',
+        permission: 'master',
       },{
         reg: '#替换列表',
         fnc: 'list',
+        permission: 'master',
       },{
         reg: '#删除操作',
         fnc: 'deleteoperations',
+        permission: 'master',
       }]
     });
   }
