@@ -4,10 +4,15 @@
 ## **用途**
 
 使改动过的js/html/css等在强制更新后恢复
+
 距离: 修改Miao-Yunzai\plugins\miao-plugin\resources\character\profile-detail.html后，如果插件更新会导致该改动被覆盖
+
 通过使用命令
+
 #增加操作name,respath,Miao-Yunzai\plugins\miao-plugin\resources\character\profile-detail.html
+
 #文件替换
+
 可自动替换改动的文件，无需手动替换
 
 ## **安装**
