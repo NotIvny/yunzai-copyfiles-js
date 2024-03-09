@@ -46,23 +46,40 @@ export class files extends plugin {
       console.log(error);
       e.reply("数据读取失败");
     }
-    let count = 0,failed = 0;
-    let name_,respath,moveto;
-    for(var i in data){
-      name_ = i;
-      respath = data[i]['respath'];
-      moveto = data[i]['moveto'];
-      fs.cp(respath, moveto, { recursive: true }, (err) => {
-        if(err){
-          console.log('Error: ' + name_ + '文件复制失败！');
-          count--;
-          failed++;
-        }
-      });
-      count++;
-      sleep(100);
+    let name,respath,moveto;
+    let getname = this.e.msg.replace("#文件替换", "").trim();
+    if(getname != ''){
+      if(data[getname]){
+        respath = data[getname]['respath'];
+        moveto = data[getname]['moveto'];
+        fs.cp(respath, moveto, { recursive: true }, (err) => {
+          if(err){
+            console.log('Error: ' + getname + '文件替换失败！');
+            return true;
+          }
+        });
+        e.reply('文件替换成功');
+      }else{
+        e.reply(getname + '不存在');
+      }
+    }else{
+      let count = 0,failed = 0;
+      for(var i in data){
+        name = i;
+        respath = data[i]['respath'];
+        moveto = data[i]['moveto'];
+        fs.cp(respath, moveto, { recursive: true }, (err) => {
+          if(err){
+            console.log('Error: ' + name + '文件替换失败！');
+            count--;
+            failed++;
+          }
+        });
+        count++;
+        sleep(100);
+      }
+      e.reply('文件复制完毕，成功' + count + '个，' + '失败' + failed + '个');
     }
-    e.reply('文件复制完毕，成功' + count + '个，' + '失败' + failed + '个');
   }
   async addoperations(e){
     const regex = /#增加操作([^,]+),([^,]+),([^,]+)/;
