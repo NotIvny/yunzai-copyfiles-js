@@ -30,21 +30,23 @@ export class files extends plugin {
       }]
     });
   }
-  
-  async copyfiles(e){
+  async createFile(e){
     if(!fs.existsSync(configpath)){
       await fs.writeFile(configpath, '{}', (err) => { 
         if (err) 
           console.log(err);
       });
-      sleep(100);
     }
+  }
+  async copyfiles(e){
+    this.createFile();
     let data;
     try {
       data = await JSON.parse(fs.readFileSync(configpath, 'utf-8'));
     } catch (error) {
       console.log(error);
       e.reply("数据读取失败");
+      return false;
     }
     let name,respath,moveto;
     let getname = this.e.msg.replace("#文件替换", "").trim();
@@ -82,6 +84,7 @@ export class files extends plugin {
     }
   }
   async addoperations(e){
+    this.createFile();
     const regex = /#增加操作([^,]+),([^,]+),([^,]+)/;
     const match = e.msg.match(regex);
     let name,respath,moveto,configdata;
@@ -110,6 +113,7 @@ export class files extends plugin {
     e.reply(name + '添加成功');
   }
   async deleteoperations(e){
+    this.createFile();
     let getname = this.e.msg.replace("#删除操作", "").trim();
     let data;
     try {
@@ -133,6 +137,7 @@ export class files extends plugin {
     }
   }
   async list(e){
+    this.createFile();
     let data;
     try {
       data = await JSON.parse(fs.readFileSync(configpath, 'utf-8'));
