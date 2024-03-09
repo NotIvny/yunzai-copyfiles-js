@@ -3,17 +3,7 @@
 
 ## **用途**
 
-使改动过的js/html/css等在强制更新后恢复
-
-距离: 修改Miao-Yunzai\plugins\miao-plugin\resources\character\profile-detail.html后，如果插件更新会导致该改动被覆盖
-
-通过使用命令
-
-#增加操作name,respath,Miao-Yunzai\plugins\miao-plugin\resources\character\profile-detail.html
-
-#文件替换
-
-可自动替换改动的文件，无需手动替换
+便捷替换文件，或使改动过的js/html/css等在强制更新后恢复
 
 ## **安装**
 下载js插件后，放到./plugins/example下
@@ -27,4 +17,4 @@
 
 #删除操作name 删除一个名称为name的配置
 
-第一次使用#增加操作 可能会提示读取文件失败，再试一次即可
+第一次请使用#文件替换 后再使用其他命令
