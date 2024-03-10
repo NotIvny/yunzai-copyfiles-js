@@ -1,8 +1,8 @@
 import plugin from '../../lib/plugins/plugin.js'
 import fs from "fs"
 let configpath = "./plugins/example/copyfiles/config.json"
-const sleep = (timeountMS) => new Promise((resolve) => {
-  setTimeout(resolve, timeountMS);
+const sleep = (timeoutMS) => new Promise((resolve) => {
+  setTimeout(resolve, timeoutMS);
 });
 export class files extends plugin {
   constructor() {
