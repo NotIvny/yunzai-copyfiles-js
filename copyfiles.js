@@ -1,6 +1,6 @@
 import plugin from '../../lib/plugins/plugin.js'
 import fs from "fs"
-let configpath = "./plugins/example/config.json"
+let configpath = "./plugins/example/copyfiles/config.json"
 const sleep = (timeountMS) => new Promise((resolve) => {
   setTimeout(resolve, timeountMS);
 });
@@ -30,18 +30,20 @@ export class files extends plugin {
       }]
     });
   }
-  async createFile(e){
+  async init(e){
     if(!fs.existsSync(configpath)){
-      await fs.writeFile(configpath, '{}', (err) => { 
-        if (err) 
-          console.log(err);
+      await fs.mkdirSync('./plugins/example/copyfiles/',{recursive: true });
+      fs.writeFile(configpath, '{}', (err) => {
+        if (err)
+          e.reply('初始化失败！\n' + err);
       });
     }
   }
   async copyfiles(e){
-    this.createFile();
+    this.init(e);
     let data;
     try {
+      await sleep(100);
       data = await JSON.parse(fs.readFileSync(configpath, 'utf-8'));
     } catch (error) {
       console.log(error);
@@ -65,30 +67,43 @@ export class files extends plugin {
         e.reply(getname + '不存在');
       }
     }else{
-      let count = 0,failed = 0;
-      for(var i in data){
+      let count = 0, failed = 0;
+      const fileCopyPromise = new Promise((resolve, reject) => {
+      const promises = [];
+      for (var i in data) {
         name = i;
         respath = data[i]['respath'];
         moveto = data[i]['moveto'];
-        fs.cp(respath, moveto, { recursive: true }, (err) => {
-          if(err){
-            console.log('Error: ' + name + '文件替换失败！');
-            count--;
-            failed++;
-          }
+        const copyPromise = new Promise((resolveCopy, rejectCopy) => {
+            fs.cp(respath, moveto, { recursive: true }, (err) => {
+                if (err) {
+                    console.log('Error: ' + name + '文件替换失败！');
+                    failed++;
+                    rejectCopy(err);
+                } else {
+                    count++;
+                    resolveCopy();
+                }
+            });
         });
-        count++;
-        sleep(100);
+        promises.push(copyPromise);
       }
-      e.reply('文件复制完毕，成功' + count + '个，' + '失败' + failed + '个');
+        resolve();
+      });
+      fileCopyPromise.then(() => {
+      sleep(1000).then(() => {
+        e.reply('文件复制完毕，成功' + count + '个，' + '失败' + failed + '个');
+        });
+      });
     }
   }
   async addoperations(e){
-    this.createFile();
+    this.init(e);
     const regex = /#增加操作([^,]+),([^,]+),([^,]+)/;
     const match = e.msg.match(regex);
     let name,respath,moveto,configdata;
     try {
+      await sleep(100);
       configdata = JSON.parse(fs.readFileSync(configpath, 'utf-8'));
     } catch (error) {
       e.reply("Error: 无法读取配置文件");
@@ -113,10 +128,11 @@ export class files extends plugin {
     e.reply(name + '添加成功');
   }
   async deleteoperations(e){
-    this.createFile();
+    this.init(e);
     let getname = this.e.msg.replace("#删除操作", "").trim();
     let data;
     try {
+      await sleep(100);
       data = JSON.parse(fs.readFileSync(configpath, 'utf-8'));
     } catch (error) {
       e.reply("Error: 无法读取配置文件");
@@ -137,9 +153,10 @@ export class files extends plugin {
     }
   }
   async list(e){
-    this.createFile();
+    this.init(e);
     let data;
     try {
+      await sleep(100);
       data = await JSON.parse(fs.readFileSync(configpath, 'utf-8'));
     } catch (error) {
       console.log(error);
